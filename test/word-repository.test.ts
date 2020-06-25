@@ -2,6 +2,7 @@ import {expect, test} from '@oclif/test'
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {MongoClient} from 'mongodb'
 import WordRepository from '../src/word-repository'
+import ProperName from './../src/proper-name'
 
 describe('WordRepository', () => {
   test
@@ -16,32 +17,12 @@ describe('WordRepository', () => {
   .stdout()
   .stderr()
   .add('repository', ctx => new WordRepository(ctx.client, ctx.db))
-  .do(async ctx => ctx.repository.insertProperName('Abu', 'PN', 'Abu (name)', 'test'))
+  .add('properName', () => new ProperName('Abu', 'PN', 'Abu (name)', 'test'))
+  .do(async ctx => ctx.repository.insertProperName(ctx.properName))
   .it('creates words', async ctx => {
     const words = await ctx.collection.find().toArray()
     expect(words).to.deep.equal([
-      {
-        _id: 'Abu I',
-        lemma: ['Abu'],
-        homonym: 'I',
-        attested: true,
-        legacyLemma: 'Abu I',
-        forms: [],
-        meaning: '',
-        logograms: [],
-        derived: [],
-        derivedFrom: null,
-        amplifiedMeanings: [],
-        pos: ['PN'],
-        guideWord: 'Abu (name)',
-        oraccWords: [
-          {
-            lemma: 'Abu',
-            guideWord: 'Abu (name)',
-          },
-        ],
-        origin: 'test',
-      },
+      ctx.properName.word,
     ])
   })
 })

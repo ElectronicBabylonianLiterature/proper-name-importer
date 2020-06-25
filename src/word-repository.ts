@@ -1,17 +1,5 @@
 import {MongoClient, Collection} from 'mongodb'
-
-const wordTemplate: {readonly [key: string]: unknown} = {
-  homonym: 'I',
-  attested: true,
-  forms: [],
-  meaning: '',
-  logograms: [],
-  derived: [],
-  derivedFrom: null,
-  amplifiedMeanings: [],
-  pos: [],
-  oraccWords: [],
-}
+import ProperName from './proper-name'
 
 export default class WordRepository {
   private readonly client: MongoClient
@@ -27,21 +15,7 @@ export default class WordRepository {
     return this.client.db(this.db).collection('words')
   }
 
-  async insertProperName(lemma: string, pos: string, guideWord: string, origin: string): Promise<void> {
-    await this.collection.insertOne({
-      ...wordTemplate,
-      _id: `${lemma} I`,
-      lemma: ['Abu'],
-      legacyLemma: 'Abu I',
-      pos: [pos],
-      guideWord: guideWord,
-      oraccWords: [
-        {
-          lemma,
-          guideWord,
-        },
-      ],
-      origin: origin,
-    })
+  async insertProperName(propeName: ProperName): Promise<void> {
+    await this.collection.insertOne(propeName.word)
   }
 }
