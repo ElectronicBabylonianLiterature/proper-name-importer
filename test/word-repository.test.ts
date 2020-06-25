@@ -16,12 +16,22 @@ describe('WordRepository', () => {
   .stdout()
   .stderr()
   .add('repository', ctx => new WordRepository(ctx.client, ctx.db))
-  .do(async ctx => ctx.repository.insertProperName('Abu', 'PN', 'Abu (name)'))
+  .do(async ctx => ctx.repository.insertProperName('Abu', 'PN', 'Abu (name)', 'test'))
   .it('creates words', async ctx => {
     const words = await ctx.collection.find().toArray()
     expect(words).to.deep.equal([
       {
         _id: 'Abu I',
+        lemma: ['Abu'],
+        homonym: 'I',
+        attested: true,
+        legacyLemma: 'Abu I',
+        forms: [],
+        meaning: '',
+        logograms: [],
+        derived: [],
+        derivedFrom: null,
+        amplifiedMeanings: [],
         pos: ['PN'],
         guideWord: 'Abu (name)',
         oraccWords: [
@@ -30,6 +40,7 @@ describe('WordRepository', () => {
             guideWord: 'Abu (name)',
           },
         ],
+        origin: 'test',
       },
     ])
   })

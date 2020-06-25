@@ -14,9 +14,19 @@ export default class WordRepository {
     return this.client.db(this.db).collection('words')
   }
 
-  async insertProperName(lemma: string, pos: string, guideWord: string): Promise<void> {
+  async insertProperName(lemma: string, pos: string, guideWord: string, origin: string): Promise<void> {
     await this.collection.insertOne({
       _id: `${lemma} I`,
+      lemma: ['Abu'],
+      homonym: 'I',
+      attested: true,
+      legacyLemma: 'Abu I',
+      forms: [],
+      meaning: '',
+      logograms: [],
+      derived: [],
+      derivedFrom: null,
+      amplifiedMeanings: [],
       pos: [pos],
       guideWord: guideWord,
       oraccWords: [
@@ -25,6 +35,7 @@ export default class WordRepository {
           guideWord,
         },
       ],
+      origin: origin,
     })
   }
 }
