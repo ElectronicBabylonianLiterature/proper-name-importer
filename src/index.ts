@@ -15,6 +15,28 @@ function readJson(fileName: string): ProperName[] {
   .value()
 }
 
+async function insertProperName(repository: WordRepository, properName: ProperName) {
+  try {
+    await repository.insertProperName(properName)
+  } catch (error) {
+    cli.warn(error)
+  }
+}
+
+async function insertProperNames(uri: string, ssl: boolean, db: string, properNames: ProperName[]) {
+  const client = createClient(uri, ssl)
+  const repository = new WordRepository(client, db)
+  try {
+    client.connect()
+    for (const properName of properNames) {
+      // eslint-disable-next-line no-await-in-loop
+      await insertProperName(repository, properName)
+    }
+  } finally {
+    client.close()
+  }
+}
+
 class ProperNameImporter extends Command {
   static description = 'Imports proper names from a JSON file to the Dictionary.'
 
@@ -37,22 +59,7 @@ class ProperNameImporter extends Command {
       cli.action.stop()
 
       cli.action.start(`Inserting words to MongoDB ${uri}...`)
-      const client = createClient(uri, ssl)
-      const repository = new WordRepository(client, db)
-      try {
-        client.connect()
-        for (const properName of properNames) {
-          try {
-            // eslint-disable-next-line no-await-in-loop
-            await repository.insertProperName(properName)
-          } catch (error) {
-            cli.warn(error)
-          }
-        }
-      } finally {
-        client.close()
-      }
-
+      await insertProperNames(uri, ssl, db, properNames)
       cli.action.stop()
     } catch (error) {
       this.error(error)
