@@ -1,5 +1,5 @@
 {
-  "name": "proper-name-importer",
+  "name": "@electronicbabylonianliterature/proper-name-importer",
   "description": "Imports proper names to Dictionary.",
   "version": "0.1.0",
   "author": "Jussi Laasonen @jlaasonen",

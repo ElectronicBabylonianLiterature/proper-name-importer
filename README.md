@@ -15,11 +15,11 @@ Imports proper names to Dictionary.
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g proper-name-importer
+$ npm install -g @electronicbabylonianliterature/proper-name-importer
 $ import-names COMMAND
 running command...
 $ import-names (-v|--version|version)
-proper-name-importer/1.0.0 win32-x64 node-v14.2.0
+@electronicbabylonianliterature/proper-name-importer/0.1.0 win32-x64 node-v14.2.0
 $ import-names --help [COMMAND]
 USAGE
   $ import-names COMMAND
