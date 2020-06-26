@@ -14,25 +14,29 @@ const wordTemplate: {readonly [key: string]: unknown} = {
 export default class ProperName {
     readonly lemma: string
 
+    readonly homonym: string
+
     readonly pos: string
 
     readonly guideWord: string
 
     readonly origin: string
 
-    constructor(lemma: string, pos: string, guideWord: string, origin: string) {
-      this.lemma = lemma
-      this.pos = pos
-      this.guideWord = guideWord
-      this.origin = origin
+    constructor(config: {lemma: string; homonym: string; pos: string; guideWord: string; origin: string}) {
+      this.lemma = config.lemma
+      this.homonym = config.homonym
+      this.pos = config.pos
+      this.guideWord = config.guideWord
+      this.origin = config.origin
     }
 
     get word() {
+      const id = `${this.lemma} ${this.homonym}`
       return {
         ...wordTemplate,
-        _id: `${this.lemma} I`,
-        lemma: ['Abu'],
-        legacyLemma: 'Abu I',
+        _id: id,
+        lemma: [this.lemma],
+        legacyLemma: id,
         pos: [this.pos],
         guideWord: this.guideWord,
         oraccWords: [

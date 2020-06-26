@@ -10,7 +10,7 @@ async function readJson(fileName: string): Promise<readonly ProperName[]> {
     readFile(fileName, 'utf8', (err, data) => err ? reject(err) : resolve(data))
   })
   .then(JSON.parse)
-  .then((json: any[]) => json.map(({lemma, pos, guideWord, origin}) => new ProperName(lemma, pos, guideWord, origin)))
+  .then((json: any[]) => json.map(config => new ProperName({...config, homonym: 'I'})))
 }
 
 class ProperNameImporter extends Command {

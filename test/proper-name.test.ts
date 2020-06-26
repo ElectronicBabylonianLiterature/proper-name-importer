@@ -3,7 +3,13 @@ import PropeName from '../src/proper-name'
 
 describe('WordRepository', () => {
   test
-  .add('properName', () => new PropeName('Abu', 'PN', 'Abu (name)', 'test'))
+  .add('properName', () => new PropeName({
+    lemma: 'Abu',
+    homonym: 'I',
+    pos: 'PN',
+    guideWord: 'Abu (name)',
+    origin: 'test',
+  }))
   .it('word has correct properties', async ctx => {
     expect(ctx.properName.word).to.deep.equal(
       {
