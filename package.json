@@ -1,7 +1,7 @@
 {
   "name": "proper-name-importer",
   "description": "Imports proper names to Dictionary.",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "Jussi Laasonen @jlaasonen",
   "bin": {
     "import-names": "./bin/run"
@@ -47,6 +47,9 @@
   "main": "lib/index.js",
   "oclif": {
     "bin": "import-names"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com/"
   },
   "repository": "ElectronicBabylonianLiterature/proper-name-importer",
   "scripts": {
