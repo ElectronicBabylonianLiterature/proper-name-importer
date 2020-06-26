@@ -3,7 +3,6 @@ import cli from 'cli-ux'
 import {readFileSync} from 'fs'
 import {MongoClientOptions, MongoClient} from 'mongodb'
 import * as _ from 'lodash'
-import {toRoman} from 'roman-numerals'
 import WordRepository from './word-repository'
 import ProperName from './proper-name'
 
@@ -12,7 +11,7 @@ function readJson(fileName: string): ProperName[] {
   .thru((data): any[] => JSON.parse(data))
   .groupBy('lemma')
   .values()
-  .flatMap(names => names.map((name, index) => new ProperName({...name, homonym: toRoman(index + 1)})))
+  .flatMap(names => names.map((name, index) => new ProperName({...name, homonym: index + 1})))
   .value()
 }
 

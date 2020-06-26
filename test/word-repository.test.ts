@@ -8,7 +8,7 @@ describe('WordRepository', () => {
   .add('repository', ctx => new WordRepository(ctx.client, ctx.db))
   .add('properName', () => new ProperName({
     lemma: 'Abu',
-    homonym: 'I',
+    homonym: 1,
     pos: 'PN',
     guideWord: 'Abu (name)',
     origin: 'test',

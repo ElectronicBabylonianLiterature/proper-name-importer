@@ -5,7 +5,7 @@ describe('WordRepository', () => {
   test
   .add('properName', () => new PropeName({
     lemma: 'Abu',
-    homonym: 'I',
+    homonym: 1,
     pos: 'PN',
     guideWord: 'Abu (name)',
     origin: 'test',

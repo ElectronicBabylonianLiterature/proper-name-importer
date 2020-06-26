@@ -1,3 +1,5 @@
+import {toRoman} from 'roman-numerals'
+
 const wordTemplate: {readonly [key: string]: unknown} = {
   attested: true,
   forms: [],
@@ -13,7 +15,7 @@ const wordTemplate: {readonly [key: string]: unknown} = {
 export default class ProperName {
     readonly lemma: string
 
-    readonly homonym: string
+    readonly homonym: number
 
     readonly pos: string
 
@@ -21,7 +23,7 @@ export default class ProperName {
 
     readonly origin: string
 
-    constructor(config: {lemma: string; homonym: string; pos: string; guideWord: string; origin: string}) {
+    constructor(config: {lemma: string; homonym: number; pos: string; guideWord: string; origin: string}) {
       this.lemma = config.lemma
       this.homonym = config.homonym
       this.pos = config.pos
@@ -30,12 +32,13 @@ export default class ProperName {
     }
 
     get word() {
-      const id = `${this.lemma} ${this.homonym}`
+      const homonym = toRoman(this.homonym)
+      const id = `${this.lemma} ${homonym}`
       return {
         ...wordTemplate,
         _id: id,
         lemma: [this.lemma],
-        homonym: this.homonym,
+        homonym: homonym,
         legacyLemma: id,
         pos: [this.pos],
         guideWord: this.guideWord,
