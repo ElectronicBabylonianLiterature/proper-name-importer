@@ -71,7 +71,7 @@ describe('proper-name-importer', () => {
       {
         _id: 'Abu II',
         lemma: ['Abu'],
-        homonym: 'I',
+        homonym: 'II',
         attested: true,
         legacyLemma: 'Abu II',
         forms: [],

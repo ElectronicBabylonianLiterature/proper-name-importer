@@ -1,5 +1,4 @@
 const wordTemplate: {readonly [key: string]: unknown} = {
-  homonym: 'I',
   attested: true,
   forms: [],
   meaning: '',
@@ -36,6 +35,7 @@ export default class ProperName {
         ...wordTemplate,
         _id: id,
         lemma: [this.lemma],
+        homonym: this.homonym,
         legacyLemma: id,
         pos: [this.pos],
         guideWord: this.guideWord,
