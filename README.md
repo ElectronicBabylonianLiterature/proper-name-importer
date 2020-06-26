@@ -4,6 +4,7 @@ proper-name-importer
 Imports proper names to Dictionary.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![Maintainability](https://api.codeclimate.com/v1/badges/830c8cce2a2afd665b75/maintainability)](https://codeclimate.com/github/ElectronicBabylonianLiterature/proper-name-importer/maintainability)
 
 <!-- toc -->
 - [proper-name-importer](#proper-name-importer)
