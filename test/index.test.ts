@@ -8,7 +8,7 @@ function runCommand(ctx: {
   db: string;
   uri: string;
 }) {
-  return cmd.run(['--host', ctx.uri, '--db', ctx.db, './test/proper-names.json'])
+  return cmd.run(['--uri', ctx.uri, '--db', ctx.db, './test/proper-names.json'])
 }
 
 describe('proper-name-importer', () => {

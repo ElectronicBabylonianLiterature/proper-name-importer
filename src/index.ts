@@ -19,7 +19,7 @@ class ProperNameImporter extends Command {
   static flags = {
     version: flags.version({char: 'v'}),
     help: flags.help({char: 'h'}),
-    host: flags.string({char: 'h', description: 'MongoDB URI', default: 'mongodb://localhost:27017'}),
+    uri: flags.string({char: 'u', description: 'MongoDB URI', default: 'mongodb://localhost:27017'}),
     db: flags.string({char: 'd', description: 'database name', default: 'ebl'}),
     ssl: flags.boolean({description: 'Use SSL connection.'}),
   }
@@ -27,14 +27,14 @@ class ProperNameImporter extends Command {
   static args = [{name: 'file', description: 'Path to the JSON file', required: true}]
 
   async run() {
-    const {args: {file}, flags: {host, db, ssl}} = this.parse(ProperNameImporter)
+    const {args: {file}, flags: {uri, db, ssl}} = this.parse(ProperNameImporter)
 
     try {
       cli.action.start(`Loading guide words from ${file}...`)
       const properNames = await readJson(file)
       cli.action.stop()
 
-      cli.action.start(`Inserting words to MongoDB ${host}...`)
+      cli.action.start(`Inserting words to MongoDB ${uri}...`)
       const options: MongoClientOptions = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -43,7 +43,7 @@ class ProperNameImporter extends Command {
         options.ssl = true
         options.sslValidate = false
       }
-      const client = new MongoClient(host, options)
+      const client = new MongoClient(uri, options)
       const repository = new WordRepository(client, db)
       try {
         client.connect()
