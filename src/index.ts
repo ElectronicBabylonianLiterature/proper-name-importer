@@ -48,8 +48,12 @@ class ProperNameImporter extends Command {
       try {
         client.connect()
         for (const properName of properNames) {
-          // eslint-disable-next-line no-await-in-loop
-          await repository.insertProperName(properName)
+          try {
+            // eslint-disable-next-line no-await-in-loop
+            await repository.insertProperName(properName)
+          } catch (error) {
+            cli.warn(error)
+          }
         }
       } finally {
         client.close()

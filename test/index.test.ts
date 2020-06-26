@@ -4,6 +4,13 @@ import {MongoClient} from 'mongodb'
 
 import cmd = require('../src')
 
+function runCommand(ctx: {
+  db: string;
+  uri: string;
+}) {
+  return cmd.run(['--host', ctx.uri, '--db', ctx.db, './test/proper-names.json'])
+}
+
 describe('proper-name-importer', () => {
   test
   .do(() => cmd.run([]))
@@ -15,7 +22,7 @@ describe('proper-name-importer', () => {
   .exit(2)
   .it('file not found')
 
-  test
+  const withDatabase = test
   .add('db', () => 'ebltest')
   .add('mongod', () => new MongoMemoryServer())
   .finally(async ctx => ctx.mongod.stop())
@@ -24,34 +31,44 @@ describe('proper-name-importer', () => {
   .do(async ctx => ctx.client.connect())
   .finally(async ctx => ctx.client.close())
   .add('collection', ctx => ctx.client.db(ctx.db).collection('words'))
-  .stdout()
-  .stderr()
-  .do(ctx => cmd.run(['--host', ctx.uri, '--db', ctx.db, './test/proper-names.json']))
+
+  const word = {
+    _id: 'Abu I',
+    lemma: ['Abu'],
+    homonym: 'I',
+    attested: true,
+    legacyLemma: 'Abu I',
+    forms: [],
+    meaning: '',
+    logograms: [],
+    derived: [],
+    derivedFrom: null,
+    amplifiedMeanings: [],
+    pos: ['PN'],
+    guideWord: 'Abu (name)',
+    oraccWords: [
+      {
+        lemma: 'Abu',
+        guideWord: 'Abu (name)',
+      },
+    ],
+    origin: 'test',
+  }
+
+  withDatabase
+  .do(runCommand)
   .it('imports proper names', async ctx => {
     const fragments = await ctx.collection.find().toArray()
-    expect(fragments).to.deep.equal([
-      {
-        _id: 'Abu I',
-        lemma: ['Abu'],
-        homonym: 'I',
-        attested: true,
-        legacyLemma: 'Abu I',
-        forms: [],
-        meaning: '',
-        logograms: [],
-        derived: [],
-        derivedFrom: null,
-        amplifiedMeanings: [],
-        pos: ['PN'],
-        guideWord: 'Abu (name)',
-        oraccWords: [
-          {
-            lemma: 'Abu',
-            guideWord: 'Abu (name)',
-          },
-        ],
-        origin: 'test',
-      },
-    ])
+    expect(fragments).to.deep.equal([word])
+  })
+
+  withDatabase
+  .stderr()
+  .do(async ctx => ctx.collection.insertOne(word))
+  .do(runCommand)
+  .it('breaks', async ctx => {
+    expect(ctx.stderr).to.contain('Abu')
+    const fragments = await ctx.collection.find().toArray()
+    expect(fragments).to.deep.equal([word])
   })
 })
