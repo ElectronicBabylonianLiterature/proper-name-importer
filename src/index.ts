@@ -1,10 +1,10 @@
 import {Command, flags} from '@oclif/command'
 import cli from 'cli-ux'
 import {readFileSync} from 'fs'
-import {MongoClientOptions, MongoClient} from 'mongodb'
 import * as _ from 'lodash'
 import WordRepository from './word-repository'
 import ProperName from './proper-name'
+import {createClient} from './mongo'
 
 function readJson(fileName: string): ProperName[] {
   return _(readFileSync(fileName, 'utf8'))
@@ -37,15 +37,7 @@ class ProperNameImporter extends Command {
       cli.action.stop()
 
       cli.action.start(`Inserting words to MongoDB ${uri}...`)
-      const options: MongoClientOptions = {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
-      if (ssl) {
-        options.ssl = true
-        options.sslValidate = false
-      }
-      const client = new MongoClient(uri, options)
+      const client = createClient(uri, ssl)
       const repository = new WordRepository(client, db)
       try {
         client.connect()
