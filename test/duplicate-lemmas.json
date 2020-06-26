@@ -1,0 +1,4 @@
+[
+  { "lemma" : "Abu", "guideWord" : "Abu (name)", "pos" : "PN", "origin" : "test" },
+  { "lemma" : "Abu", "guideWord" : "Abu (city)", "pos" : "SN", "origin" : "test" }
+]

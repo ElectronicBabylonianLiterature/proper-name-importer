@@ -1,16 +1,19 @@
 import {Command, flags} from '@oclif/command'
 import cli from 'cli-ux'
-import {readFile} from 'fs'
+import {readFileSync} from 'fs'
 import {MongoClientOptions, MongoClient} from 'mongodb'
+import * as _ from 'lodash'
+import {toRoman} from 'roman-numerals'
 import WordRepository from './word-repository'
 import ProperName from './proper-name'
 
-async function readJson(fileName: string): Promise<readonly ProperName[]> {
-  return new Promise<string>((resolve, reject) => {
-    readFile(fileName, 'utf8', (err, data) => err ? reject(err) : resolve(data))
-  })
-  .then(JSON.parse)
-  .then((json: any[]) => json.map(config => new ProperName({...config, homonym: 'I'})))
+function readJson(fileName: string): ProperName[] {
+  return _(readFileSync(fileName, 'utf8'))
+  .thru((data): any[] => JSON.parse(data))
+  .groupBy('lemma')
+  .values()
+  .flatMap(names => names.map((name, index) => new ProperName({...name, homonym: toRoman(index + 1)})))
+  .value()
 }
 
 class ProperNameImporter extends Command {
@@ -31,7 +34,7 @@ class ProperNameImporter extends Command {
 
     try {
       cli.action.start(`Loading guide words from ${file}...`)
-      const properNames = await readJson(file)
+      const properNames = readJson(file)
       cli.action.stop()
 
       cli.action.start(`Inserting words to MongoDB ${uri}...`)

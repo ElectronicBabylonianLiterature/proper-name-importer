@@ -3,11 +3,11 @@ import {withDatabase} from './context'
 
 import cmd = require('../src')
 
-function runCommand(ctx: {
-  db: string;
-  uri: string;
-}) {
-  return cmd.run(['--uri', ctx.uri, '--db', ctx.db, './test/proper-names.json'])
+function runCommand(file: string) {
+  return (ctx: {
+    db: string;
+    uri: string;
+  }) => cmd.run(['--uri', ctx.uri, '--db', ctx.db, `./test/${file}`])
 }
 
 describe('proper-name-importer', () => {
@@ -21,7 +21,7 @@ describe('proper-name-importer', () => {
   .exit(2)
   .it('file not found')
 
-  const word = {
+  const abu_i = {
     _id: 'Abu I',
     lemma: ['Abu'],
     homonym: 'I',
@@ -45,19 +45,51 @@ describe('proper-name-importer', () => {
   }
 
   withDatabase
-  .do(runCommand)
+  .do(runCommand('proper-names.json'))
   .it('imports proper names', async ctx => {
     const fragments = await ctx.collection.find().toArray()
-    expect(fragments).to.deep.equal([word])
+    expect(fragments).to.deep.equal([abu_i])
   })
 
   withDatabase
   .stderr()
-  .do(async ctx => ctx.collection.insertOne(word))
-  .do(runCommand)
-  .it('breaks', async ctx => {
-    expect(ctx.stderr).to.contain('Abu')
+  .do(async ctx => ctx.collection.insertOne(abu_i))
+  .do(runCommand('proper-names.json'))
+  .it('reports duplicates', async ctx => {
+    expect(ctx.stderr).to.contain('Abu I')
     const fragments = await ctx.collection.find().toArray()
-    expect(fragments).to.deep.equal([word])
+    expect(fragments).to.deep.equal([abu_i])
+  })
+
+  withDatabase
+  .do(async ctx => ctx.collection.insertOne(abu_i))
+  .do(runCommand('duplicate-lemmas.json'))
+  .it('creates homonyms on duplicate lemma', async ctx => {
+    const fragments = await ctx.collection.find().toArray()
+    expect(fragments).to.deep.equal([
+      abu_i,
+      {
+        _id: 'Abu II',
+        lemma: ['Abu'],
+        homonym: 'I',
+        attested: true,
+        legacyLemma: 'Abu II',
+        forms: [],
+        meaning: '',
+        logograms: [],
+        derived: [],
+        derivedFrom: null,
+        amplifiedMeanings: [],
+        pos: ['SN'],
+        guideWord: 'Abu (city)',
+        oraccWords: [
+          {
+            lemma: 'Abu',
+            guideWord: 'Abu (city)',
+          },
+        ],
+        origin: 'test',
+      },
+    ])
   })
 })
