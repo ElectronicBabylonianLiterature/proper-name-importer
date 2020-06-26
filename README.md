@@ -4,13 +4,11 @@ proper-name-importer
 Imports proper names to Dictionary.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/proper-name-importer.svg)](https://npmjs.org/package/proper-name-importer)
-[![Downloads/week](https://img.shields.io/npm/dw/proper-name-importer.svg)](https://npmjs.org/package/proper-name-importer)
-[![License](https://img.shields.io/npm/l/proper-name-importer.svg)](https://github.com/ElectronicBabylonianLiterature/proper-name-importer/blob/master/package.json)
 
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
+- [proper-name-importer](#proper-name-importer)
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
 # Usage
 <!-- usage -->
