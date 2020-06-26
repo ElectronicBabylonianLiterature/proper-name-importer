@@ -6,6 +6,16 @@ import cmd = require('../src')
 
 describe('proper-name-importer', () => {
   test
+  .do(() => cmd.run([]))
+  .exit(2)
+  .it('missing file argument')
+
+  test
+  .do(() => cmd.run(['not-found.json']))
+  .exit(2)
+  .it('file not found')
+
+  test
   .add('db', () => 'ebltest')
   .add('mongod', () => new MongoMemoryServer())
   .finally(async ctx => ctx.mongod.stop())
