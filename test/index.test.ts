@@ -1,6 +1,5 @@
 import {expect, test} from '@oclif/test'
-import {MongoMemoryServer} from 'mongodb-memory-server'
-import {MongoClient} from 'mongodb'
+import {withDatabase} from './context'
 
 import cmd = require('../src')
 
@@ -21,16 +20,6 @@ describe('proper-name-importer', () => {
   .do(() => cmd.run(['not-found.json']))
   .exit(2)
   .it('file not found')
-
-  const withDatabase = test
-  .add('db', () => 'ebltest')
-  .add('mongod', () => new MongoMemoryServer())
-  .finally(async ctx => ctx.mongod.stop())
-  .add('uri', async ctx => ctx.mongod.getUri())
-  .add('client', async ctx => new MongoClient(ctx.uri, {useNewUrlParser: true, useUnifiedTopology: true}))
-  .do(async ctx => ctx.client.connect())
-  .finally(async ctx => ctx.client.close())
-  .add('collection', ctx => ctx.client.db(ctx.db).collection('words'))
 
   const word = {
     _id: 'Abu I',
