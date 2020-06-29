@@ -53,12 +53,16 @@ describe('proper-name-importer', () => {
 
   withDatabase
   .stderr()
-  .do(async ctx => ctx.collection.insertOne(abu_i))
+  .do(async ctx => ctx.collection.insertOne({...abu_i, oraccWords: [
+    {lemma: 'Uba', guideWord: 'Uba'},
+  ]}))
   .do(runCommand('proper-names.json'))
-  .it('reports duplicates', async ctx => {
-    expect(ctx.stderr).to.contain('Abu I')
+  .it('adds oraccWords to existing words', async ctx => {
     const fragments = await ctx.collection.find().toArray()
-    expect(fragments).to.deep.equal([abu_i])
+    expect(fragments).to.deep.equal([{
+      ...abu_i,
+      oraccWords: [{lemma: 'Uba', guideWord: 'Uba'}, ...abu_i.oraccWords],
+    }])
   })
 
   withDatabase

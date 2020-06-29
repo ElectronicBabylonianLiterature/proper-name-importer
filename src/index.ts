@@ -17,7 +17,11 @@ function readJson(fileName: string): ProperName[] {
 
 async function insertProperName(repository: WordRepository, properName: ProperName) {
   try {
-    await repository.insertProperName(properName)
+    if (await repository.hasWord(properName.id)) {
+      await repository.addOraccWord(properName)
+    } else {
+      await repository.insertProperName(properName)
+    }
   } catch (error) {
     cli.warn(error)
   }
