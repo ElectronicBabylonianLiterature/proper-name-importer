@@ -39,10 +39,17 @@ describe('ProperName', () => {
   })
 
   properName.it('has correct homonym', ctx => {
-    expect(ctx.properName.homonym).equal('I')
+    expect(ctx.properName.homonym).to.equal('I')
   })
 
   properName.it('has correct id', ctx => {
-    expect(ctx.properName.id).equal('Abu I')
+    expect(ctx.properName.id).to.equal('Abu I')
+  })
+
+  properName.it('has correct oraccWord', ctx => {
+    expect(ctx.properName.oraccWord).to.deep.equal({
+      lemma: 'Abu',
+      guideWord: 'Abu (name)',
+    })
   })
 })

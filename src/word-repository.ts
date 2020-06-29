@@ -27,7 +27,7 @@ export default class WordRepository {
   async addOraccWord(properName: ProperName): Promise<void> {
     await this.collection.updateOne(
       {_id: properName.id},
-      {$addToSet: {oraccWords: {lemma: properName.lemma, guideWord: properName.guideWord}}},
+      {$addToSet: {oraccWords: properName.oraccWord}},
     )
   }
 }

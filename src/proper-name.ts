@@ -12,6 +12,11 @@ const wordTemplate: {readonly [key: string]: unknown} = {
   oraccWords: [],
 }
 
+interface OraccWord {
+  lemma: string;
+  guideWord: string;
+}
+
 export default class ProperName {
     readonly lemma: string
 
@@ -39,6 +44,13 @@ export default class ProperName {
       return `${this.lemma} ${this.homonym}`
     }
 
+    get oraccWord(): OraccWord {
+      return {
+        lemma: this.lemma,
+        guideWord: this.guideWord,
+      }
+    }
+
     get word() {
       return {
         ...wordTemplate,
@@ -48,12 +60,7 @@ export default class ProperName {
         legacyLemma: this.lemma,
         pos: [this.pos],
         guideWord: this.guideWord,
-        oraccWords: [
-          {
-            lemma: this.lemma,
-            guideWord: this.guideWord,
-          },
-        ],
+        oraccWords: [this.oraccWord],
         origin: this.origin,
       }
     }
