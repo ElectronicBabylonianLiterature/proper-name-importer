@@ -2,7 +2,7 @@ import {expect, test} from '@oclif/test'
 import PropeName from '../src/proper-name'
 
 describe('ProperName', () => {
-  test
+  const properName = test
   .add('properName', () => new PropeName({
     lemma: 'Abu',
     homonym: 1,
@@ -10,7 +10,8 @@ describe('ProperName', () => {
     guideWord: 'Abu (name)',
     origin: 'test',
   }))
-  .it('word has correct properties', async ctx => {
+
+  properName.it('word has correct properties', async ctx => {
     expect(ctx.properName.word).to.deep.equal(
       {
         _id: 'Abu I',
@@ -35,5 +36,13 @@ describe('ProperName', () => {
         origin: 'test',
       }
     )
+  })
+
+  properName.it('has correct homonym', ctx => {
+    expect(ctx.properName.homonym).equal('I')
+  })
+
+  properName.it('has correct id', ctx => {
+    expect(ctx.properName.id).equal('Abu I')
   })
 })
