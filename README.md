@@ -10,39 +10,29 @@ Imports proper names to Dictionary.
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
-- [proper-name-importer](#proper-name-importer)
-- [Usage](#usage)
-- [Commands](#commands)
-<!-- tocstop -->
+
 # Usage
 <!-- usage -->
 ```sh-session
 $ npm install -g @electronicbabylonianliterature/proper-name-importer
-$ import-names COMMAND
-running command...
 $ import-names (-v|--version|version)
 @electronicbabylonianliterature/proper-name-importer/0.2.0 win32-x64 node-v14.2.0
-$ import-names --help [COMMAND]
+$ import-names --help
 USAGE
-  $ import-names COMMAND
-...
-```
-<!-- usagestop -->
-```sh-session
-$ npm install -g @electronicbabylonianliterature/proper-name-importer
-$ import-names COMMAND
-running command...
-$ import-names (-v|--version|version)
-@electronicbabylonianliterature/proper-name-importer/0.1.0 win32-x64 node-v14.2.0
-$ import-names --help [COMMAND]
-USAGE
-  $ import-names COMMAND
-...
-```
-<!-- usagestop -->
-# Commands
-<!-- commands -->
+  $ import-names FILE
 
-<!-- commandsstop -->
+ARGUMENTS
+  FILE  Path to the JSON file
 
-<!-- commandsstop -->
+OPTIONS
+  -d, --db=db    [default: ebl] database name
+  -h, --help     show CLI help
+  -u, --uri=uri  [default: mongodb://localhost:27017] MongoDB URI
+  -v, --version  show CLI version
+  --ssl          Use SSL connection.
+```
+
+The file be a valid JSON containing an array of objets with following string properties `lemma`,
+`guideWord`, `pos`, `origin`. A new word is added to the `words` collection in the database.
+If the data contains duplicate lemmata, a new homonym is created for each.
+<!-- usagestop -->
