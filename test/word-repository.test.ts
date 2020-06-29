@@ -42,7 +42,7 @@ describe('WordRepository', () => {
     origin: 'test',
   }))
   .do(async ctx => ctx.repository.addOraccWord(ctx.duplicateProperName))
-  .it('addOraccWord', async ctx => {
+  .it('addOraccWord adds the oraccWord', async ctx => {
     const words = await ctx.collection.find().toArray()
     expect(words).to.deep.equal([
       {
@@ -50,5 +50,12 @@ describe('WordRepository', () => {
         oraccWords: ctx.properName.word.oraccWords.concat(ctx.duplicateProperName.word.oraccWords),
       },
     ])
+  })
+
+  insertWord
+  .do(async ctx => ctx.repository.addOraccWord(ctx.properName))
+  .it('addOraccWord does not create duplicate oraccWords', async ctx => {
+    const words = await ctx.collection.find().toArray()
+    expect(words).to.deep.equal([ctx.properName.word])
   })
 })
