@@ -39,7 +39,7 @@ export default class ProperName {
         _id: id,
         lemma: [this.lemma],
         homonym: homonym,
-        legacyLemma: id,
+        legacyLemma: this.lemma,
         pos: [this.pos],
         guideWord: this.guideWord,
         oraccWords: [

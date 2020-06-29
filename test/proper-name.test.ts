@@ -17,7 +17,7 @@ describe('WordRepository', () => {
         lemma: ['Abu'],
         homonym: 'I',
         attested: true,
-        legacyLemma: 'Abu I',
+        legacyLemma: 'Abu',
         forms: [],
         meaning: '',
         logograms: [],
