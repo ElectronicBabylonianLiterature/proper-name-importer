@@ -20,4 +20,19 @@ describe('WordRepository', () => {
       ctx.properName.word,
     ])
   })
+
+  withDatabase
+  .add('repository', ctx => new WordRepository(ctx.client, ctx.db))
+  .add('properName', () => new ProperName({
+    lemma: 'Abu',
+    homonym: 1,
+    pos: 'PN',
+    guideWord: 'Abu (name)',
+    origin: 'test',
+  }))
+  .do(async ctx => ctx.repository.insertProperName(ctx.properName))
+  .it('hasWords', async ctx => {
+    expect(await ctx.repository.hasWord('Abu I')).equal(true)
+    expect(await ctx.repository.hasWord('Abu II')).equal(false)
+  })
 })

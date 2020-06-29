@@ -1,4 +1,5 @@
 import {MongoClient, Collection} from 'mongodb'
+import * as _ from 'lodash'
 import ProperName from './proper-name'
 
 export default class WordRepository {
@@ -17,5 +18,9 @@ export default class WordRepository {
 
   async insertProperName(propeName: ProperName): Promise<void> {
     await this.collection.insertOne(propeName.word)
+  }
+
+  async hasWord(id: string): Promise<boolean> {
+    return !_.isNil(await this.collection.findOne({_id: id}))
   }
 }
