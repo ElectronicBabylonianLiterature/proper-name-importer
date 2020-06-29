@@ -1,7 +1,7 @@
 {
   "name": "@electronicbabylonianliterature/proper-name-importer",
   "description": "Imports proper names to Dictionary.",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "author": "Jussi Laasonen @jlaasonen",
   "bin": {
     "import-names": "./bin/run"
