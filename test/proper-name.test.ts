@@ -1,7 +1,7 @@
 import {expect, test} from '@oclif/test'
 import PropeName from '../src/proper-name'
 
-describe('WordRepository', () => {
+describe('ProperName', () => {
   test
   .add('properName', () => new PropeName({
     lemma: 'Abu',
