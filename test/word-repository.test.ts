@@ -58,4 +58,21 @@ describe('WordRepository', () => {
     const words = await ctx.collection.find().toArray()
     expect(words).to.deep.equal([ctx.properName.word])
   })
+
+  insertWord
+  .add('homonym', () => new ProperName({
+    lemma: 'Abu',
+    homonym: 2,
+    pos: 'GN',
+    guideWord: 'other Abu',
+    origin: 'test',
+  }))
+  .do(async ctx => ctx.repository.insertProperName(ctx.homonym))
+  .it('findWords finds all homonyms', async ctx => {
+    const words = await ctx.repository.findWords(ctx.properName.lemma)
+    expect(words).to.deep.equal([
+      ctx.properName.word,
+      ctx.homonym.word,
+    ])
+  })
 })

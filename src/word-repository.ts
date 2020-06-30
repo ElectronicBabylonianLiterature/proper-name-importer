@@ -24,6 +24,10 @@ export default class WordRepository {
     return !_.isNil(await this.collection.findOne({_id: id}))
   }
 
+  async findWords(lemma: string): Promise<any[]> {
+    return this.collection.find({lemma: [lemma]}).toArray()
+  }
+
   async addOraccWord(properName: ProperName): Promise<void> {
     await this.collection.updateOne(
       {_id: properName.id},
