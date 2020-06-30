@@ -52,21 +52,19 @@ describe('proper-name-importer', () => {
   })
 
   withDatabase
-  .stderr()
-  .do(async ctx => ctx.collection.insertOne({...abu_i, oraccWords: [
-    {lemma: 'Uba', guideWord: 'Uba'},
-  ]}))
+  .stdout()
+  .add('words', () => [abu_i, {...abu_i, _id: 'Abu II', homonym: 'II', pos: ['GN']}])
+  .do(async ctx => ctx.collection.insertMany(ctx.words))
   .do(runCommand('proper-names.json'))
-  .it('adds oraccWords to existing words', async ctx => {
+  .it('reports duplicates in the database', async ctx => {
+    expect(ctx.stdout).to.contain('Abu I PN is duplicate.')
+    expect(ctx.stdout).to.contain('\tAbu I PN test')
+    expect(ctx.stdout).to.contain('\tAbu II GN test')
     const fragments = await ctx.collection.find().toArray()
-    expect(fragments).to.deep.equal([{
-      ...abu_i,
-      oraccWords: [{lemma: 'Uba', guideWord: 'Uba'}, ...abu_i.oraccWords],
-    }])
+    expect(fragments).to.deep.equal(ctx.words)
   })
 
   withDatabase
-  .do(async ctx => ctx.collection.insertOne(abu_i))
   .do(runCommand('duplicate-lemmas.json'))
   .it('creates homonyms on duplicate lemma', async ctx => {
     const fragments = await ctx.collection.find().toArray()

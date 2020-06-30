@@ -1,40 +1,44 @@
 import {Command, flags} from '@oclif/command'
 import cli from 'cli-ux'
-import {readFileSync} from 'fs'
 import * as _ from 'lodash'
 import WordRepository from './word-repository'
 import ProperName from './proper-name'
 import {createClient} from './mongo'
-
-function readJson(fileName: string): ProperName[] {
-  return _(readFileSync(fileName, 'utf8'))
-  .thru((data): any[] => JSON.parse(data))
-  .groupBy('lemma')
-  .values()
-  .flatMap(names => names.map((name, index) => new ProperName({...name, homonym: index + 1})))
-  .value()
-}
+import {ProperNames, readJson} from './json'
 
 async function insertProperName(repository: WordRepository, properName: ProperName) {
   try {
-    if (await repository.hasWord(properName.id)) {
-      await repository.addOraccWord(properName)
-    } else {
-      await repository.insertProperName(properName)
-    }
+    await repository.insertProperName(properName)
   } catch (error) {
     cli.warn(error)
   }
 }
 
-async function insertProperNames(uri: string, ssl: boolean, db: string, properNames: ProperName[]) {
+async function inserProperNamesForLemma(lemma: string, names: ProperName[], repository: WordRepository): Promise<void> {
+  const words = await repository.findWords(lemma)
+  if (_.isEmpty(words)) {
+    for (const properName of names) {
+      // eslint-disable-next-line no-await-in-loop
+      await insertProperName(repository, properName)
+    }
+  } else {
+    for (const properName of names) {
+      cli.log(`${properName.lemma} ${properName.homonym} ${properName.pos} is duplicate.`)
+      for (const word of words) {
+        cli.log(`\t${word.lemma} ${word.homonym} ${word.pos} ${word.origin}`)
+      }
+    }
+  }
+}
+
+async function insertProperNames(uri: string, ssl: boolean, db: string, properNames: ProperNames) {
   const client = createClient(uri, ssl)
   const repository = new WordRepository(client, db)
   try {
     client.connect()
-    for (const properName of properNames) {
+    for (const [lemma, names] of _.toPairs(properNames)) {
       // eslint-disable-next-line no-await-in-loop
-      await insertProperName(repository, properName)
+      await inserProperNamesForLemma(lemma, names, repository)
     }
   } finally {
     client.close()
