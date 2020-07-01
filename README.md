@@ -12,7 +12,7 @@ Imports proper names to Dictionary.
 ```sh-session
 $ npm install -g @electronicbabylonianliterature/proper-name-importer
 $ import-names (-v|--version|version)
-@electronicbabylonianliterature/proper-name-importer/1.0.0 win32-x64 node-v14.2.0
+@electronicbabylonianliterature/proper-name-importer/2.0.0 win32-x64 node-v14.2.0
 $ import-names --help
 USAGE
   $ import-names FILE
