@@ -24,9 +24,9 @@ async function inserProperNamesForLemma(lemma: string, names: ProperName[], repo
   } else {
     for (const properName of names) {
       cli.log(`${properName.lemma} ${properName.homonym} ${properName.pos} is duplicate.`)
-      for (const word of words) {
-        cli.log(`\t${word.lemma} ${word.homonym} ${word.pos} ${word.origin}`)
-      }
+    }
+    for (const word of words) {
+      cli.log(`\t${word.lemma} ${word.homonym} ${word.pos} ${word.origin}`)
     }
   }
 }
