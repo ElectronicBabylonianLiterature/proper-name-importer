@@ -17,10 +17,7 @@ async function insertProperName(repository: WordRepository, properName: ProperNa
 async function inserProperNamesForLemma(lemma: string, names: ProperName[], repository: WordRepository): Promise<void> {
   const words = await repository.findWords(lemma)
   if (_.isEmpty(words)) {
-    for (const properName of names) {
-      // eslint-disable-next-line no-await-in-loop
-      await insertProperName(repository, properName)
-    }
+    await Promise.all(names.map(properName => insertProperName(repository, properName)))
   } else {
     for (const properName of names) {
       cli.log(`${properName.lemma} ${properName.homonym} ${properName.pos} is duplicate.`)
