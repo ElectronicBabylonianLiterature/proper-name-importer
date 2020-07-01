@@ -24,42 +24,6 @@ describe('WordRepository', () => {
   })
 
   insertWord
-  .it('hasWords returns true if the word exists', async ctx => {
-    expect(await ctx.repository.hasWord('Abu I')).equal(true)
-  })
-
-  insertWord
-  .it('hasWords returns false if the word does not exist', async ctx => {
-    expect(await ctx.repository.hasWord('Abu II')).equal(false)
-  })
-
-  insertWord
-  .add('duplicateProperName', () => new ProperName({
-    lemma: 'Abu',
-    homonym: 1,
-    pos: 'GN',
-    guideWord: 'other Abu',
-    origin: 'test',
-  }))
-  .do(async ctx => ctx.repository.addOraccWord(ctx.duplicateProperName))
-  .it('addOraccWord adds the oraccWord', async ctx => {
-    const words = await ctx.collection.find().toArray()
-    expect(words).to.deep.equal([
-      {
-        ...ctx.properName.word,
-        oraccWords: ctx.properName.word.oraccWords.concat(ctx.duplicateProperName.word.oraccWords),
-      },
-    ])
-  })
-
-  insertWord
-  .do(async ctx => ctx.repository.addOraccWord(ctx.properName))
-  .it('addOraccWord does not create duplicate oraccWords', async ctx => {
-    const words = await ctx.collection.find().toArray()
-    expect(words).to.deep.equal([ctx.properName.word])
-  })
-
-  insertWord
   .add('homonym', () => new ProperName({
     lemma: 'Abu',
     homonym: 2,

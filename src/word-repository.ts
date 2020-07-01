@@ -1,5 +1,4 @@
 import {MongoClient, Collection} from 'mongodb'
-import * as _ from 'lodash'
 import ProperName from './proper-name'
 
 export default class WordRepository {
@@ -20,18 +19,7 @@ export default class WordRepository {
     await this.collection.insertOne(propeName.word)
   }
 
-  async hasWord(id: string): Promise<boolean> {
-    return !_.isNil(await this.collection.findOne({_id: id}))
-  }
-
   async findWords(lemma: string): Promise<any[]> {
     return this.collection.find({lemma: [lemma]}).toArray()
-  }
-
-  async addOraccWord(properName: ProperName): Promise<void> {
-    await this.collection.updateOne(
-      {_id: properName.id},
-      {$addToSet: {oraccWords: properName.oraccWord}},
-    )
   }
 }
